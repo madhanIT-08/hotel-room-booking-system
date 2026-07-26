@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="/">🏨 Hotel Room Booking System</a>
+    <div>
+        <a href="/rooms" class="btn btn-outline-light btn-sm">Rooms</a>
+        <a href="/customers" class="btn btn-outline-light btn-sm">Customers</a>
+        <a href="/bookings" class="btn btn-outline-light btn-sm">Bookings</a>
+        <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>All Bookings</h2>
+        <a href="/bookings/new" class="btn btn-success">+ New Booking</a>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Guest</th>
+            <th>Phone</th>
+            <th>Room</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.id}"></td>
+            <td th:text="${booking.customer.name}"></td>
+            <td th:text="${booking.customer.phone}"></td>
+            <td th:text="${booking.room.roomNumber}"></td>
+            <td th:text="${booking.checkInDate}"></td>
+            <td th:text="${booking.checkOutDate}"></td>
+            <td th:text="${booking.status}"></td>
+            <td>
+                <a th:if="${booking.status.name() == 'CONFIRMED'}" th:href="@{/bookings/checkin/{id}(id=${booking.id})}" class="btn btn-sm btn-success">Check-In</a>
+                <a th:if="${booking.status.name() == 'CHECKED_IN'}" th:href="@{/bookings/checkout/{id}(id=${booking.id})}" class="btn btn-sm btn-info">Check-Out</a>
+                <a th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-sm btn-warning">Edit</a>
+                <a th:href="@{/bookings/delete/{id}(id=${booking.id})}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Cancel this booking?');">Delete</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(bookings)}">
+            <td colspan="8" class="text-center text-muted">No bookings yet.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
